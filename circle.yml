@@ -1,0 +1,3 @@
+general:
+  artifacts:
+    - "check_consul_service" # The compiled program
