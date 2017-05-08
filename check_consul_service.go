@@ -2,6 +2,7 @@ package main
 
 //check_consul_service.go
 //Nagios plugins style check for services in consul
+//eddie.stecker my first Go program
 
 import (
 	"flag"
@@ -20,7 +21,7 @@ var statusMap = map[string]int{
 	"critical": 2,
 	"unknown":  3,
 	"maintenance": 3,
-	"error": -1,
+	"error": 3,
 }
 
 func CheckNode(out io.Writer, health consulapi.Health, queryOptions consulapi.QueryOptions, argNode *string) {
@@ -135,20 +136,27 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	queryOptions := consulapi.QueryOptions{AllowStale: true}
+
 	health := client.Health()
 
 	argDebug := flag.Bool("debug", false, "Enable debug logging")
 	//argServer TODO Server address, but for now default is localhost
 	//argPort TODO?
-	//argDC TODO datacenter
 	//argTLS TODO?
 	argService := flag.String("service", "", "Name of service in consul to check")
 	argNode := flag.String("node", "", "Node you want to check the service on, otherwise check aggregate")
 	argTag := flag.String("tag", "", "Services with this tag, must also have a service argument.")
 	argWarn := flag.Float64("warn", 100, "Warn if less than this percent of passing nodes. Used with 'service'.")
 	argCrit := flag.Float64("crit", 100, "Critical if less than this percent of passing nodes. Used with 'service'.")
+	argDC := flag.String("dc", "", "The Consul datacenter which the machine is in")
 	flag.Parse()
+
+
+	queryOptions := consulapi.QueryOptions{AllowStale: true}
+	if *argDC != "" {
+		queryOptions = consulapi.QueryOptions{AllowStale: true, Datacenter: *argDC}
+	}
+
 
 	if *argDebug == true {
 		//Setup debug mode
