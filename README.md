@@ -6,8 +6,10 @@ Program exit codes follow the API specified at https://docs.icinga.com/latest/en
 
 Options
 ```
-  -crit float
+   -crit float
     	Critical if less than this percent of passing nodes. Used with 'service'. (default 100)
+  -dc string
+    	The Consul datacenter which the machine is in
   -debug
     	Enable debug logging
   -node string
